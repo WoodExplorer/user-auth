@@ -1,4 +1,4 @@
-package user
+package role
 
 import (
 	"context"
@@ -14,13 +14,13 @@ type Repo struct {
 	store stores.Store
 }
 
-func NewRepo(store stores.Store) repository.UserRepo {
+func NewRepo(store stores.Store) repository.RoleRepo {
 	var repo Repo
 	repo.store = store
 	return &repo
 }
 
-func (r Repo) Create(c context.Context, user models.User) (err error) {
+func (r Repo) Create(c context.Context, user models.Role) (err error) {
 	bytes, err := json.Marshal(user)
 	if err != nil {
 		return
@@ -32,7 +32,7 @@ func (r Repo) Create(c context.Context, user models.User) (err error) {
 	return
 }
 
-func (r Repo) Get(c context.Context, user models.UserIdentity) (res models.User, err error) {
+func (r Repo) Get(c context.Context, user models.RoleIdentity) (res models.Role, err error) {
 	bytes, err := r.store.GetE(user.Name)
 	if errors.Is(err, appErr.ErrStoreRecNotFound) {
 		err = appErr.ErrRepoRecNotFound
@@ -47,7 +47,7 @@ func (r Repo) Get(c context.Context, user models.UserIdentity) (res models.User,
 	return
 }
 
-func (r Repo) Delete(c context.Context, user models.UserIdentity) (err error) {
+func (r Repo) Delete(c context.Context, user models.RoleIdentity) (err error) {
 	err = r.store.DelE(user.Name)
 	if errors.Is(err, appErr.ErrStoreRecNotFound) {
 		err = appErr.ErrRepoRecNotFound

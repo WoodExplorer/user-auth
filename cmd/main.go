@@ -46,7 +46,7 @@ var runCmd = &cobra.Command{
 		}()
 
 		store := memory.NewStore()
-		repo := repoUser.NewUserRepo(store)
+		repo := repoUser.NewRepo(store)
 		srvUser := user.NewService(repo)
 
 		r := router.InitRouter(srvUser)
