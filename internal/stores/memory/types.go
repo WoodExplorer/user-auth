@@ -1,11 +1,14 @@
 package memory
 
 const (
-	opSet   = "set"
-	opGet   = "get"
-	opDel   = "del"
-	opKeys  = "keys"
-	opBatch = "batch"
+	opSet     = "set"
+	opGet     = "get"
+	opDel     = "del"
+	opKeys    = "keys"
+	opBatch   = "batch"
+	opHSet    = "hset"
+	opHGet    = "hget"
+	opHGetAll = "hgetAll"
 )
 
 type Result struct {
@@ -14,8 +17,9 @@ type Result struct {
 }
 
 type Command struct {
-	Op   string
-	Key  string
-	Data []byte
-	Ret  chan Result `json:"-"`
+	Op     string
+	Key    string
+	SubKey string
+	Data   []byte
+	Ret    chan Result `json:"-"` // TODO: private?
 }

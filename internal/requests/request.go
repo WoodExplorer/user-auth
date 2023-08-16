@@ -54,6 +54,6 @@ type CheckRole struct {
 	RoleName string `json:"roleName" validate:"required"`
 }
 
-type AllRoles struct {
+type UserRoles struct {
 	Token string `json:"token" validate:"required"`
 }

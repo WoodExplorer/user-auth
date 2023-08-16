@@ -31,5 +31,5 @@ type Authn interface {
 
 type Authz interface {
 	CheckRole(c context.Context, r requests.CheckRole) (res responses.CheckRole, err error)
-	AllRoles(c context.Context, r requests.AllRoles) (res responses.AllRoles, err error)
+	GetUserRoles(c context.Context, r requests.UserRoles) (res responses.UserRoles, err error)
 }

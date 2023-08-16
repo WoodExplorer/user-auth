@@ -7,6 +7,7 @@ import "github.com/pkg/errors"
 var (
 	ErrStoreRecAlreadyExists = errors.New("store: record already exists")
 	ErrStoreRecNotFound      = errors.New("store: record not found")
+	ErrStoreSubKeyNotFound   = errors.New("store: sub-key not found")
 )
 
 // repository

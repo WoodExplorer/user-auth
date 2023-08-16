@@ -115,10 +115,45 @@ func (s *Store) Keys(keyPrefix string) (data [][]byte, err error) {
 	return res.Data.([][]byte), res.Err
 }
 
-func (s *Store) SyncExe(cmd Command) Result {
-	if cmd.Ret == nil {
-		cmd.Ret = make(chan Result, 1)
+func (s *Store) HSet(key string, subKey string, data []byte) (err error) {
+	ret := make(chan Result, 1)
+	s.chCmd <- Command{
+		Op:     opHSet,
+		Key:    key,
+		SubKey: subKey,
+		Data:   data,
+		Ret:    ret,
 	}
+	res := <-ret
+	return res.Err
+}
+
+func (s *Store) HGet(key string, subKey string) (data []byte, err error) {
+	ret := make(chan Result, 1)
+	s.chCmd <- Command{
+		Op:     opHGet,
+		Key:    key,
+		SubKey: subKey,
+		Data:   data,
+		Ret:    ret,
+	}
+	res := <-ret
+	return res.Data.([]byte), res.Err
+}
+
+func (s *Store) HGetAll(key string) (m map[string][]byte, err error) {
+	ret := make(chan Result, 1)
+	s.chCmd <- Command{
+		Op:  opHGetAll,
+		Key: key,
+		Ret: ret,
+	}
+	res := <-ret
+	return res.Data.(map[string][]byte), res.Err
+}
+
+func (s *Store) SyncExe(cmd Command) Result {
+	cmd.Ret = make(chan Result, 1)
 	s.chCmd <- cmd
 	return <-cmd.Ret
 }

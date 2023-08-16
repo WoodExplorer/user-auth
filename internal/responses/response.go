@@ -51,6 +51,6 @@ type CheckRole struct {
 	Ok bool `json:"ok"`
 }
 
-type AllRoles struct {
+type UserRoles struct {
 	Roles []Role `json:"roles"`
 }

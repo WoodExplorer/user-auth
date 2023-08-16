@@ -57,6 +57,28 @@ func (t *Tx) Keys(_ string) (data [][]byte, err error) {
 	return
 }
 
+func (t *Tx) HSet(key string, subKey string, data []byte) (err error) {
+	ret := make(chan Result, 1)
+	t.queued = append(t.queued, Command{
+		Op:     opHSet,
+		Key:    key,
+		SubKey: subKey,
+		Data:   data,
+		Ret:    ret,
+	})
+	return
+}
+
+func (t *Tx) HGet(_ string, _ string) (data []byte, err error) {
+	// TODO: current tx implementation cannot interleave custom-code, so this function does nothing
+	return
+}
+
+func (t *Tx) HGetAll(_ string) (m map[string][]byte, err error) {
+	// TODO: current tx implementation cannot interleave custom-code, so this function does nothing
+	return
+}
+
 func (t *Tx) BeginTx() stores.Store {
 	return t
 }

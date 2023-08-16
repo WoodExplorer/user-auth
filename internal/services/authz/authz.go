@@ -53,7 +53,21 @@ func (s Service) CheckRole(c context.Context, r requests.CheckRole) (res respons
 	return
 }
 
-func (s Service) AllRoles(c context.Context, r requests.AllRoles) (res responses.AllRoles, err error) {
-	//TODO implement me
-	panic("implement me")
+func (s Service) GetUserRoles(c context.Context, r requests.UserRoles) (res responses.UserRoles, err error) {
+
+	userInfo, err := pkg.ParseToken(r.Token, configs.GetJwtKey())
+	if err != nil {
+		err = errors.ErrAuthzInvalidToken
+		return
+	}
+
+	userRoles, err := s.userRoleRepo.GetUserRoles(c, models.UserIdentity{Name: userInfo.Name})
+	if err != nil {
+		return
+	}
+
+	for _, userRole := range userRoles {
+		res.Roles = append(res.Roles, responses.Role{Name: userRole.RoleName})
+	}
+	return
 }

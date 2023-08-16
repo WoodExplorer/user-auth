@@ -7,6 +7,7 @@ import (
 	"github.com/WoodExplorer/user-auth/internal/repository"
 	"github.com/WoodExplorer/user-auth/internal/stores"
 	"github.com/pkg/errors"
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -17,8 +18,16 @@ func prefix(key string) string {
 	return keyPrefix + key
 }
 
-func getKey(t models.Token) string {
-	return prefix(t.Value)
+func getKey(iVal interface{}) string {
+	switch val := iVal.(type) {
+	case models.Token:
+		return prefix(val.Value)
+	case models.TokenIdentity:
+		return prefix(val.Value)
+	default:
+		log.Warn().Msgf("unknown supported: %+v", val)
+	}
+	return ""
 }
 
 type Repo struct {
@@ -39,5 +48,17 @@ func (r Repo) Create(_ context.Context, token models.Token) (err error) {
 		}
 		return
 	}
+	return
+}
+
+func (r Repo) Exists(_ context.Context, token models.TokenIdentity) (ok bool, err error) {
+	_, err = r.store.Get(getKey(token))
+	if errors.Is(err, appErr.ErrStoreRecNotFound) {
+		err = nil
+		return
+	} else if err != nil {
+		return
+	}
+	ok = true
 	return
 }

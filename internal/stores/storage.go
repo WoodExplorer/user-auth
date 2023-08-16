@@ -9,6 +9,10 @@ type Store interface {
 	Del(key string) (err error)
 	Keys(keyPrefix string) (data [][]byte, err error)
 
+	HSet(key string, subKey string, data []byte) (err error)
+	HGet(key string, subKey string) (data []byte, err error)
+	HGetAll(key string) (m map[string][]byte, err error)
+
 	BeginTx() Store
 	CommitTx() (err error)
 }
