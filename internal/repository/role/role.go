@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	keyPrefix = "role-"
+	keyPrefix = "role:"
 )
 
 func prefix(key string) string {

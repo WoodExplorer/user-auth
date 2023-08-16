@@ -21,6 +21,7 @@ type Role interface {
 }
 
 type UserRole interface {
+	Bind(c context.Context, user requests.BindUserRole) (err error)
 }
 
 type Authn interface {

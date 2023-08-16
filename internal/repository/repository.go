@@ -21,5 +21,4 @@ type RoleRepo interface {
 
 type UserRoleRepo interface {
 	Create(c context.Context, userRole models.UserRole) (err error)
-	Delete(c context.Context, userRole models.UserRole) (err error)
 }

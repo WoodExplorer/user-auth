@@ -18,11 +18,13 @@
 package cmd
 
 import (
-	roleRepo "github.com/WoodExplorer/user-auth/internal/repository/role"
-	userRepo "github.com/WoodExplorer/user-auth/internal/repository/user"
+	role_repo "github.com/WoodExplorer/user-auth/internal/repository/role"
+	user_repo "github.com/WoodExplorer/user-auth/internal/repository/user"
+	user_role_repo "github.com/WoodExplorer/user-auth/internal/repository/user_role"
 	"github.com/WoodExplorer/user-auth/internal/router"
 	"github.com/WoodExplorer/user-auth/internal/services/role"
 	"github.com/WoodExplorer/user-auth/internal/services/user"
+	"github.com/WoodExplorer/user-auth/internal/services/user_role"
 	"github.com/WoodExplorer/user-auth/internal/stores/memory"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -35,7 +37,7 @@ import (
 
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "Run datahub-bff service",
+	Short: "Run user-auth service",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		go func() {
@@ -50,13 +52,15 @@ var runCmd = &cobra.Command{
 		store := memory.NewStore()
 		store.Start()
 
-		rr := roleRepo.NewRepo(store)
-		ur := userRepo.NewRepo(store)
+		rr := role_repo.NewRepo(store)
+		ur := user_repo.NewRepo(store)
+		urr := user_role_repo.NewRepo(store)
 
 		roleSvc := role.NewService(rr)
 		userSvc := user.NewService(ur)
+		userRoleSvc := user_role.NewService(urr)
 
-		r := router.InitRouter(roleSvc, userSvc)
+		r := router.InitRouter(roleSvc, userSvc, userRoleSvc)
 		go func() {
 			err := r.Start()
 			if err != nil {
@@ -69,8 +73,8 @@ var runCmd = &cobra.Command{
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 		<-quit
 
+		r.Stop()
 		store.Stop()
-
 		log.Info().Msg("server exited")
 	},
 }

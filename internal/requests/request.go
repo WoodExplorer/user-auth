@@ -28,3 +28,10 @@ type GetRole struct {
 type DeleteRole struct {
 	Name string `json:"name" uri:"name"  validate:"required"`
 }
+
+// user-role
+
+type BindUserRole struct {
+	UserName string `json:"userName" validate:"required"`
+	RoleName string `json:"roleName" validate:"required"`
+}
