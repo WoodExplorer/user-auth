@@ -64,6 +64,5 @@ func (s *Service) Delete(c context.Context, req requests.DeleteUser) (err error)
 		}
 		return
 	}
-
 	return
 }

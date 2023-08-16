@@ -21,6 +21,9 @@ var (
 var (
 	ErrSvcUserAlreadyExisted = errors.New("user already existed")
 	ErrSvcUserNotExisted     = errors.New("user does not existed")
+
+	ErrSvcRoleAlreadyExisted = errors.New("role already existed")
+	ErrSvcRoleNotExisted     = errors.New("role does not existed")
 )
 
 // authn

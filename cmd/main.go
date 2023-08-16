@@ -66,7 +66,7 @@ var runCmd = &cobra.Command{
 		authnSvc := authn.NewService(ur, tbr)
 		authzSvc := authz.NewService(urr, tbr)
 
-		r := router.InitRouter(roleSvc, userSvc, userRoleSvc, authnSvc, authzSvc)
+		_, r := router.InitRouter(roleSvc, userSvc, userRoleSvc, authnSvc, authzSvc)
 		go func() {
 			err := r.Start()
 			if err != nil {

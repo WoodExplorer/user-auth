@@ -6,7 +6,7 @@ const (
 )
 
 type Wrapper struct {
-	Code int32       `json:"code"`
+	Code int         `json:"code"`
 	Msg  string      `json:"msg"`
 	Data interface{} `json:"data"`
 }

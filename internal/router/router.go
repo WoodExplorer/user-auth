@@ -23,8 +23,7 @@ func InitRouter(
 	usrRoleSvc services.UserRole,
 	authnSvc services.Authn,
 	authzSvc services.Authz,
-) Router {
-	var r Router
+) (engine *gin.Engine, r Router) {
 
 	r.roleSvc = roleSvc
 	r.usrSvc = usrSvc
@@ -32,7 +31,7 @@ func InitRouter(
 	r.authnSvc = authnSvc
 	r.authzSvc = authzSvc
 
-	engine := gin.New()
+	engine = gin.New()
 	engine.MaxMultipartMemory = 8 << 20 // 8 MiB
 	engine.Use(gin.Recovery())
 	engine.Use(middlewares.GinLogger())
@@ -45,7 +44,7 @@ func InitRouter(
 	r.initAuthnRoutes(v1.Group("/authn"))
 	r.initAuthzRoutes(v1.Group("/authz"))
 
-	return r
+	return
 }
 
 func (r Router) initUserRoutes(g *gin.RouterGroup) {

@@ -1,4 +1,4 @@
-package user_role
+package token_blacklist
 
 import (
 	"context"

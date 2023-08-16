@@ -2,11 +2,13 @@ package role
 
 import (
 	"context"
+	appErr "github.com/WoodExplorer/user-auth/internal/errors"
 	"github.com/WoodExplorer/user-auth/internal/models"
 	"github.com/WoodExplorer/user-auth/internal/repository"
 	"github.com/WoodExplorer/user-auth/internal/requests"
 	"github.com/WoodExplorer/user-auth/internal/responses"
 	"github.com/WoodExplorer/user-auth/internal/services"
+	"github.com/pkg/errors"
 )
 
 type Service struct {
@@ -22,6 +24,9 @@ func NewService(repo repository.RoleRepo) services.Role {
 func (s *Service) Create(c context.Context, req requests.CreateRole) (err error) {
 	err = s.repo.Create(c, models.Role{Name: req.Name})
 	if err != nil {
+		if errors.Is(err, appErr.ErrStoreRecAlreadyExists) {
+			err = appErr.ErrSvcRoleAlreadyExisted
+		}
 		return
 	}
 	return
@@ -52,8 +57,10 @@ func (s *Service) List(c context.Context) (res responses.ListRoles, err error) {
 func (s *Service) Delete(c context.Context, req requests.DeleteRole) (err error) {
 	err = s.repo.Delete(c, models.RoleIdentity{Name: req.Name})
 	if err != nil {
+		if errors.Is(err, appErr.ErrRepoRecNotFound) {
+			err = appErr.ErrSvcRoleNotExisted
+		}
 		return
 	}
-
 	return
 }
