@@ -33,7 +33,7 @@ func (r Repo) Create(c context.Context, user models.User) (err error) {
 }
 
 func (r Repo) Get(c context.Context, user models.UserIdentity) (res models.User, err error) {
-	bytes, err := r.store.GetE(user.Name)
+	bytes, err := r.store.Get(user.Name)
 	if errors.Is(err, appErr.ErrStoreRecNotFound) {
 		err = appErr.ErrRepoRecNotFound
 		return
@@ -48,7 +48,7 @@ func (r Repo) Get(c context.Context, user models.UserIdentity) (res models.User,
 }
 
 func (r Repo) Delete(c context.Context, user models.UserIdentity) (err error) {
-	err = r.store.DelE(user.Name)
+	err = r.store.Del(user.Name)
 	if errors.Is(err, appErr.ErrStoreRecNotFound) {
 		err = appErr.ErrRepoRecNotFound
 		return

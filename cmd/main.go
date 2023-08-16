@@ -46,6 +46,8 @@ var runCmd = &cobra.Command{
 		}()
 
 		store := memory.NewStore()
+		store.Start()
+
 		repo := repoUser.NewRepo(store)
 		srvUser := user.NewService(repo)
 
@@ -61,6 +63,8 @@ var runCmd = &cobra.Command{
 		quit := make(chan os.Signal)
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 		<-quit
+
+		store.Stop()
 
 		log.Info().Msg("server exited")
 	},
