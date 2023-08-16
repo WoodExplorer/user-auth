@@ -37,6 +37,18 @@ func (s *Service) Get(c context.Context, req requests.GetUser) (res responses.Ge
 	return
 }
 
+func (s *Service) List(c context.Context) (res responses.ListUsers, err error) {
+	users, err := s.repo.List(c)
+	if err != nil {
+		return
+	}
+
+	for _, u := range users {
+		res.Items = append(res.Items, responses.User{Name: u.Name})
+	}
+	return
+}
+
 func (s *Service) Delete(c context.Context, req requests.DeleteUser) (err error) {
 	err = s.repo.Delete(c, models.UserIdentity{Name: req.Name})
 	if err != nil {

@@ -9,6 +9,7 @@ type UserRepo interface {
 	Create(c context.Context, user models.User) (err error)
 	Get(c context.Context, user models.UserIdentity) (res models.User, err error)
 	Delete(c context.Context, user models.UserIdentity) (err error)
+	List(ctx context.Context) (res []models.User, err error)
 }
 
 type RoleRepo interface {

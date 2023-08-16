@@ -29,11 +29,11 @@ func NewRepo(store stores.Store) repository.UserRepo {
 }
 
 func (r Repo) Create(c context.Context, user models.User) (err error) {
-	bytes, err := json.Marshal(prefix(user.Name))
+	bytes, err := json.Marshal(user)
 	if err != nil {
 		return
 	}
-	err = r.store.Set(user.Name, bytes)
+	err = r.store.Set(prefix(user.Name), bytes)
 	if err != nil {
 		return
 	}
@@ -51,6 +51,22 @@ func (r Repo) Get(c context.Context, user models.UserIdentity) (res models.User,
 	err = json.Unmarshal(bytes, &res)
 	if err != nil {
 		return
+	}
+	return
+}
+
+func (r Repo) List(_ context.Context) (res []models.User, err error) {
+	bytesSlice, err := r.store.Keys(keyPrefix)
+	if err != nil {
+		return
+	}
+	for _, bytes := range bytesSlice {
+		var buf models.User
+		err = json.Unmarshal(bytes, &buf)
+		if err != nil {
+			return
+		}
+		res = append(res, buf)
 	}
 	return
 }

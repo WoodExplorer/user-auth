@@ -37,6 +37,7 @@ func InitRouter(
 }
 
 func (r Router) initUserRoutes(g *gin.RouterGroup) {
+	g.GET("", Wrapper(r.listUsers)) // TODO: 性能风险, 调试用
 	g.GET("/:name", Wrapper(r.getUser))
 	g.POST("/", Wrapper(r.createUser))
 	g.DELETE("/:name", Wrapper(r.deleteUser))

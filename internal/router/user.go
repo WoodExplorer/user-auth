@@ -33,6 +33,16 @@ func (r Router) getUser(c *gin.Context) (_ interface{}, err error) {
 	return res, nil
 }
 
+func (r Router) listUsers(c *gin.Context) (_ interface{}, err error) {
+
+	res, err := r.usrSvc.List(c)
+	if err != nil {
+		return
+	}
+
+	return res, nil
+}
+
 func (r Router) deleteUser(c *gin.Context) (_ interface{}, err error) {
 	var p requests.DeleteUser
 	if err = bindAndValidate(c, &p); err != nil {
