@@ -17,5 +17,6 @@ var (
 
 // authn
 var (
-	ErrAuthnFailed = errors.New("authentication failed")
+	ErrAuthnFailed   = errors.New("authentication failed")
+	ErrAuthnTokenErr = errors.New("token error")
 )

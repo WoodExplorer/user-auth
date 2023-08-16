@@ -23,11 +23,13 @@ func Wrapper(handler func(*gin.Context) (interface{}, error)) func(c *gin.Contex
 
 		resp := responses.Wrapper{Data: data}
 		if err != nil {
+			resp.Code = responses.CodeError
 			resp.Msg = err.Error()
 			log.Error().Msgf("handler error: %+v", err)
 			c.JSON(http.StatusOK, resp)
 			return
 		}
+		resp.Code = responses.CodeOK
 		c.JSON(http.StatusOK, resp)
 	}
 }

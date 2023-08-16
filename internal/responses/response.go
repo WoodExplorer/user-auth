@@ -1,5 +1,10 @@
 package responses
 
+const (
+	CodeOK    = 0
+	CodeError = 1
+)
+
 type Wrapper struct {
 	Code int32       `json:"code"`
 	Msg  string      `json:"msg"`
