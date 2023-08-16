@@ -46,3 +46,14 @@ type Authenticate struct {
 type Invalidate struct {
 	Token string `json:"token" validate:"required"`
 }
+
+// authz
+
+type CheckRole struct {
+	Token    string `json:"token" validate:"required"`
+	RoleName string `json:"roleName" validate:"required"`
+}
+
+type AllRoles struct {
+	Token string `json:"token" validate:"required"`
+}

@@ -21,8 +21,10 @@ type RoleRepo interface {
 
 type UserRoleRepo interface {
 	Create(c context.Context, userRole models.UserRole) (err error)
+	Exists(_ context.Context, userRole models.UserRoleIdentity) (ok bool, err error)
 }
 
 type TokenBlacklistRepo interface {
 	Create(c context.Context, token models.Token) (err error)
+	Exists(ctx context.Context, token models.TokenIdentity) (ok bool, err error)
 }

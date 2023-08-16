@@ -44,3 +44,13 @@ type ListRoles struct {
 type Authenticate struct {
 	Token string `json:"token"`
 }
+
+// authz
+
+type CheckRole struct {
+	Ok bool `json:"ok"`
+}
+
+type AllRoles struct {
+	Roles []Role `json:"roles"`
+}

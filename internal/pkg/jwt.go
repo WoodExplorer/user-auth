@@ -8,8 +8,7 @@ import (
 )
 
 type UserInfo struct {
-	Name      string
-	RoleNames []string
+	Name string
 }
 
 type UserInfoClaims struct {
