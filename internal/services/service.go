@@ -16,6 +16,7 @@ type User interface {
 type Role interface {
 	Create(c context.Context, user requests.CreateRole) (err error)
 	Get(c context.Context, user requests.GetRole) (res responses.GetRole, err error)
+	List(c context.Context) (res responses.ListRoles, err error)
 	Delete(c context.Context, user requests.DeleteRole) (err error)
 }
 

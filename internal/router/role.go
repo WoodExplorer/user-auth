@@ -33,6 +33,16 @@ func (r Router) getRole(c *gin.Context) (_ interface{}, err error) {
 	return res, nil
 }
 
+func (r Router) listRoles(c *gin.Context) (_ interface{}, err error) {
+
+	res, err := r.roleSvc.List(c)
+	if err != nil {
+		return
+	}
+
+	return res, nil
+}
+
 func (r Router) deleteRole(c *gin.Context) (_ interface{}, err error) {
 	var p requests.DeleteRole
 	if err = bindAndValidate(c, &p); err != nil {

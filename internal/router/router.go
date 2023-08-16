@@ -37,13 +37,14 @@ func InitRouter(
 }
 
 func (r Router) initUserRoutes(g *gin.RouterGroup) {
-	g.GET("", Wrapper(r.listUsers)) // TODO: 性能风险, 调试用
+	g.GET("", Wrapper(r.listUsers)) // TODO: 性能风险, 仅调试用
 	g.GET("/:name", Wrapper(r.getUser))
 	g.POST("/", Wrapper(r.createUser))
 	g.DELETE("/:name", Wrapper(r.deleteUser))
 }
 
 func (r Router) initRoleRoutes(g *gin.RouterGroup) {
+	g.GET("", Wrapper(r.listRoles)) // TODO: 性能风险, 仅调试用
 	g.GET("/:name", Wrapper(r.getRole))
 	g.POST("/", Wrapper(r.createRole))
 	g.DELETE("/:name", Wrapper(r.deleteRole))

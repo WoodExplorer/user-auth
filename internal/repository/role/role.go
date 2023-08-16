@@ -28,7 +28,7 @@ func NewRepo(store stores.Store) repository.RoleRepo {
 	return &repo
 }
 
-func (r Repo) Create(c context.Context, user models.Role) (err error) {
+func (r Repo) Create(_ context.Context, user models.Role) (err error) {
 	bytes, err := json.Marshal(user)
 	if err != nil {
 		return
@@ -40,7 +40,7 @@ func (r Repo) Create(c context.Context, user models.Role) (err error) {
 	return
 }
 
-func (r Repo) Get(c context.Context, user models.RoleIdentity) (res models.Role, err error) {
+func (r Repo) Get(_ context.Context, user models.RoleIdentity) (res models.Role, err error) {
 	bytes, err := r.store.Get(prefix(user.Name))
 	if errors.Is(err, appErr.ErrStoreRecNotFound) {
 		err = appErr.ErrRepoRecNotFound
@@ -55,7 +55,23 @@ func (r Repo) Get(c context.Context, user models.RoleIdentity) (res models.Role,
 	return
 }
 
-func (r Repo) Delete(c context.Context, user models.RoleIdentity) (err error) {
+func (r Repo) List(_ context.Context) (res []models.Role, err error) {
+	bytesSlice, err := r.store.Keys(keyPrefix)
+	if err != nil {
+		return
+	}
+	for _, bytes := range bytesSlice {
+		var buf models.Role
+		err = json.Unmarshal(bytes, &buf)
+		if err != nil {
+			return
+		}
+		res = append(res, buf)
+	}
+	return
+}
+
+func (r Repo) Delete(_ context.Context, user models.RoleIdentity) (err error) {
 	err = r.store.Del(prefix(user.Name))
 	if errors.Is(err, appErr.ErrStoreRecNotFound) {
 		err = appErr.ErrRepoRecNotFound

@@ -15,7 +15,8 @@ type UserRepo interface {
 type RoleRepo interface {
 	Create(c context.Context, role models.Role) (err error)
 	Get(c context.Context, role models.RoleIdentity) (res models.Role, err error)
-	Delete(c context.Context, role models.RoleIdentity) (err error) // TODO: 如果用户有这个角色?
+	Delete(c context.Context, role models.RoleIdentity) (err error)
+	List(ctx context.Context) (res []models.Role, err error)
 }
 
 type UserRoleRepo interface {

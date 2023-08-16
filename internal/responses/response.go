@@ -6,6 +6,8 @@ type Wrapper struct {
 	Data interface{} `json:"data"`
 }
 
+// user
+
 type User struct {
 	Name string `json:"name"`
 }
@@ -18,6 +20,16 @@ type ListUsers struct {
 	Items []User `json:"items"`
 }
 
-type GetRole struct {
+// role
+
+type Role struct {
 	Name string `json:"name"`
+}
+
+type GetRole struct {
+	Role
+}
+
+type ListRoles struct {
+	Items []Role `json:"items"`
 }
