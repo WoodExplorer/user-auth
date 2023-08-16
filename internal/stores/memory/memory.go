@@ -5,6 +5,7 @@ import (
 	appErr "github.com/WoodExplorer/user-auth/internal/errors"
 	"github.com/WoodExplorer/user-auth/internal/stores"
 	"github.com/pkg/errors"
+	"strings"
 )
 
 type Store struct {
@@ -49,6 +50,8 @@ func (s *Store) handleCmd(c Command) (res Result) {
 		res.Data, res.Err = s.get(c.Key)
 	case opDel:
 		res.Err = s.del(c.Key)
+	case opKeys:
+		res.Data, res.Err = s.keys(c.Key)
 	case opBatch:
 		res.Err = s.batch(c.Data)
 	default:
@@ -87,7 +90,7 @@ func (s *Store) Get(key string) ([]byte, error) {
 		Ret: ret,
 	}
 	res := <-ret
-	return res.Data, res.Err
+	return res.Data.([]byte), res.Err
 }
 
 func (s *Store) Del(key string) (err error) {
@@ -99,6 +102,17 @@ func (s *Store) Del(key string) (err error) {
 	}
 	res := <-ret
 	return res.Err
+}
+
+func (s *Store) Keys(keyPrefix string) (data [][]byte, err error) {
+	ret := make(chan Result, 1)
+	s.chCmd <- Command{
+		Op:  opKeys,
+		Key: keyPrefix,
+		Ret: ret,
+	}
+	res := <-ret
+	return res.Data.([][]byte), res.Err
 }
 
 func (s *Store) SyncExe(cmd Command) Result {
@@ -148,6 +162,19 @@ func (s *Store) batch(data []byte) (err error) {
 		res := s.handleCmd(cmd)
 		if res.Err != nil {
 			return res.Err
+		}
+	}
+	return
+}
+
+// keys
+// TODO: This function has serious performance problem. Potential optimizations include:
+// 1) use dict tree
+// 2) introduce scan, which would return only a part of data
+func (s *Store) keys(keyPrefix string) (res [][]byte, err error) {
+	for key, val := range s.area {
+		if strings.HasPrefix(key, keyPrefix) {
+			res = append(res, val)
 		}
 	}
 	return

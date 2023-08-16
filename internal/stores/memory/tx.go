@@ -38,7 +38,7 @@ func (t *Tx) Set(key string, data []byte) (err error) {
 }
 
 func (t *Tx) Get(_ string) (res []byte, err error) {
-	// note: current tx implementation cannot interleave custom-code, so this function does nothing
+	// TODO: current tx implementation cannot interleave custom-code, so this function does nothing
 	return
 }
 
@@ -49,6 +49,11 @@ func (t *Tx) Del(key string) (err error) {
 		Key: key,
 		Ret: ret,
 	})
+	return
+}
+
+func (t *Tx) Keys(_ string) (data [][]byte, err error) {
+	// TODO: current tx implementation cannot interleave custom-code, so this function does nothing
 	return
 }
 

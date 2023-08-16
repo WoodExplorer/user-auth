@@ -4,12 +4,13 @@ const (
 	opSet   = "set"
 	opGet   = "get"
 	opDel   = "del"
+	opKeys  = "keys"
 	opBatch = "batch"
 )
 
 type Result struct {
 	Err  error
-	Data []byte
+	Data interface{}
 }
 
 type Command struct {
