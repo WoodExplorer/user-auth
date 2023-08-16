@@ -3,7 +3,8 @@ package errors
 import "github.com/pkg/errors"
 
 var (
-	ErrStoreRecNotFound = errors.New("store: record not found")
+	ErrStoreRecAlreadyExists = errors.New("store: record already exists")
+	ErrStoreRecNotFound      = errors.New("store: record not found")
 )
 
 var (

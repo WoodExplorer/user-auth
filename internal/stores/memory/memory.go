@@ -44,7 +44,7 @@ func (s *Store) Stop() {
 func (s *Store) handleCmd(c Command) (res Result) {
 	switch c.Op {
 	case opSet:
-		s.set(c.Key, c.Data)
+		res.Err = s.set(c.Key, c.Data)
 	case opGet:
 		res.Data, res.Err = s.get(c.Key)
 	case opDel:
@@ -109,8 +109,14 @@ func (s *Store) SyncExe(cmd Command) Result {
 	return <-cmd.Ret
 }
 
-func (s *Store) set(key string, data []byte) {
+func (s *Store) set(key string, data []byte) (err error) {
+	_, ok := s.area[key]
+	if ok {
+		err = appErr.ErrStoreRecAlreadyExists
+		return
+	}
 	s.area[key] = data
+	return
 }
 
 func (s *Store) get(key string) (res []byte, err error) {
