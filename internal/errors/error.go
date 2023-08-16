@@ -12,7 +12,7 @@ var (
 )
 
 var (
-	ErrUserExisted = errors.New("user already existed")
+	ErrSvcUserExisted = errors.New("user already existed")
 )
 
 // authn

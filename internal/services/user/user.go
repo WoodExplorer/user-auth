@@ -2,12 +2,14 @@ package user
 
 import (
 	"context"
+	appErr "github.com/WoodExplorer/user-auth/internal/errors"
 	"github.com/WoodExplorer/user-auth/internal/models"
 	"github.com/WoodExplorer/user-auth/internal/pkg"
 	"github.com/WoodExplorer/user-auth/internal/repository"
 	"github.com/WoodExplorer/user-auth/internal/requests"
 	"github.com/WoodExplorer/user-auth/internal/responses"
 	"github.com/WoodExplorer/user-auth/internal/services"
+	"github.com/pkg/errors"
 )
 
 type Service struct {
@@ -24,6 +26,9 @@ func (s *Service) Create(c context.Context, req requests.CreateUser) (err error)
 	hash := pkg.GetPasswordHash(req.Name, req.Password)
 	err = s.repo.Create(c, models.User{Name: req.Name, PasswordHash: hash})
 	if err != nil {
+		if errors.Is(err, appErr.ErrStoreRecAlreadyExists) {
+			err = appErr.ErrSvcUserExisted
+		}
 		return
 	}
 	return
