@@ -20,8 +20,7 @@ func NewService(repo repository.UserRoleRepo) services.UserRole {
 
 func (s *Service) Bind(c context.Context, req requests.BindUserRole) (err error) {
 
-	// TODO: 存在性检查
-
+	// TODO: check the existence of user and role
 	err = s.repo.Create(c, models.UserRole{UserName: req.UserName, RoleName: req.RoleName})
 	if err != nil {
 		return

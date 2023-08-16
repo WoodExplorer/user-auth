@@ -31,5 +31,5 @@ var (
 // authz
 var (
 	ErrAuthzInvalidToken     = errors.New("invalid token")
-	ErrAuthzTokenInBlacklist = errors.New("token expired")
+	ErrAuthzTokenInBlacklist = errors.New("token has been invalidated")
 )

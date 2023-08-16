@@ -50,10 +50,10 @@ type Invalidate struct {
 // authz
 
 type CheckRole struct {
-	Token    string `json:"token" validate:"required"`
-	RoleName string `json:"roleName" validate:"required"`
+	Token    string `json:"token" form:"token" validate:"required"`
+	RoleName string `json:"roleName" form:"roleName" validate:"required"`
 }
 
 type UserRoles struct {
-	Token string `json:"token" validate:"required"`
+	Token string `json:"token" form:"token" validate:"required"`
 }

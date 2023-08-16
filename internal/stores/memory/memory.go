@@ -12,7 +12,7 @@ type Store struct {
 	chCmd    chan Command
 	chClose  chan struct{}
 	chExited chan struct{}
-	area     map[string][]byte
+	area     map[string]interface{}
 }
 
 func NewStore() stores.Store {
@@ -20,7 +20,7 @@ func NewStore() stores.Store {
 	s.chCmd = make(chan Command, 1024)
 	s.chClose = make(chan struct{})
 	s.chExited = make(chan struct{})
-	s.area = make(map[string][]byte)
+	s.area = make(map[string]interface{})
 	return &s
 }
 
@@ -52,6 +52,12 @@ func (s *Store) handleCmd(c Command) (res Result) {
 		res.Err = s.del(c.Key)
 	case opKeys:
 		res.Data, res.Err = s.keys(c.Key)
+	case opHSet:
+		res.Err = s.hset(c.Key, c.SubKey, c.Data)
+	case opHGet:
+		res.Data, res.Err = s.hget(c.Key, c.SubKey)
+	case opHGetAll:
+		res.Data, res.Err = s.hgetall(c.Key)
 	case opBatch:
 		res.Err = s.batch(c.Data)
 	default:
@@ -169,11 +175,12 @@ func (s *Store) set(key string, data []byte) (err error) {
 }
 
 func (s *Store) get(key string) (res []byte, err error) {
-	res, ok := s.area[key]
+	iRes, ok := s.area[key]
 	if !ok {
 		err = appErr.ErrStoreRecNotFound
 		return
 	}
+	res = iRes.([]byte)
 	return
 }
 
@@ -209,8 +216,46 @@ func (s *Store) batch(data []byte) (err error) {
 func (s *Store) keys(keyPrefix string) (res [][]byte, err error) {
 	for key, val := range s.area {
 		if strings.HasPrefix(key, keyPrefix) {
-			res = append(res, val)
+			res = append(res, val.([]byte))
 		}
 	}
+	return
+}
+
+// hset
+// TODO: inconsistent with op set, which would report 'record already existed' error
+func (s *Store) hset(key string, subKey string, data []byte) (err error) {
+	iVal, ok := s.area[key]
+	if !ok || iVal == nil {
+		s.area[key] = make(map[string][]byte)
+	}
+
+	val := s.area[key].(map[string][]byte)
+	val[subKey] = data
+	return
+}
+
+func (s *Store) hget(key string, subKey string) (res []byte, err error) {
+	iVal, ok := s.area[key]
+	if !ok {
+		err = appErr.ErrStoreRecNotFound
+		return
+	}
+	val := iVal.(map[string][]byte)
+	res, ok = val[subKey]
+	if !ok {
+		err = appErr.ErrStoreSubKeyNotFound
+		return
+	}
+	return
+}
+
+func (s *Store) hgetall(key string) (res map[string][]byte, err error) {
+	iVal, ok := s.area[key]
+	if !ok {
+		err = appErr.ErrStoreRecNotFound
+		return
+	}
+	res = iVal.(map[string][]byte)
 	return
 }
