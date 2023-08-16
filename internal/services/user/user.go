@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"github.com/WoodExplorer/user-auth/internal/models"
+	"github.com/WoodExplorer/user-auth/internal/pkg"
 	"github.com/WoodExplorer/user-auth/internal/repository"
 	"github.com/WoodExplorer/user-auth/internal/requests"
 	"github.com/WoodExplorer/user-auth/internal/responses"
@@ -20,7 +21,8 @@ func NewService(repo repository.UserRepo) services.User {
 }
 
 func (s *Service) Create(c context.Context, req requests.CreateUser) (err error) {
-	err = s.repo.Create(c, models.User{Name: req.Name, PasswordHash: req.Password})
+	hash := pkg.GetPasswordHash(req.Name, req.Password)
+	err = s.repo.Create(c, models.User{Name: req.Name, PasswordHash: hash})
 	if err != nil {
 		return
 	}

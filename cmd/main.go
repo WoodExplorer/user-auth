@@ -22,6 +22,7 @@ import (
 	user_repo "github.com/WoodExplorer/user-auth/internal/repository/user"
 	user_role_repo "github.com/WoodExplorer/user-auth/internal/repository/user_role"
 	"github.com/WoodExplorer/user-auth/internal/router"
+	"github.com/WoodExplorer/user-auth/internal/services/authn"
 	"github.com/WoodExplorer/user-auth/internal/services/role"
 	"github.com/WoodExplorer/user-auth/internal/services/user"
 	"github.com/WoodExplorer/user-auth/internal/services/user_role"
@@ -59,8 +60,9 @@ var runCmd = &cobra.Command{
 		roleSvc := role.NewService(rr)
 		userSvc := user.NewService(ur)
 		userRoleSvc := user_role.NewService(urr)
+		authnSvc := authn.NewService(ur)
 
-		r := router.InitRouter(roleSvc, userSvc, userRoleSvc)
+		r := router.InitRouter(roleSvc, userSvc, userRoleSvc, authnSvc)
 		go func() {
 			err := r.Start()
 			if err != nil {

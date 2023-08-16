@@ -7,24 +7,26 @@ import (
 )
 
 type User interface {
-	Create(c context.Context, user requests.CreateUser) (err error)
-	Get(c context.Context, user requests.GetUser) (res responses.GetUser, err error)
+	Create(c context.Context, r requests.CreateUser) (err error)
+	Get(c context.Context, r requests.GetUser) (res responses.GetUser, err error)
 	List(c context.Context) (res responses.ListUsers, err error)
-	Delete(c context.Context, user requests.DeleteUser) (err error)
+	Delete(c context.Context, r requests.DeleteUser) (err error)
 }
 
 type Role interface {
-	Create(c context.Context, user requests.CreateRole) (err error)
-	Get(c context.Context, user requests.GetRole) (res responses.GetRole, err error)
+	Create(c context.Context, r requests.CreateRole) (err error)
+	Get(c context.Context, r requests.GetRole) (res responses.GetRole, err error)
 	List(c context.Context) (res responses.ListRoles, err error)
-	Delete(c context.Context, user requests.DeleteRole) (err error)
+	Delete(c context.Context, r requests.DeleteRole) (err error)
 }
 
 type UserRole interface {
-	Bind(c context.Context, user requests.BindUserRole) (err error)
+	Bind(c context.Context, r requests.BindUserRole) (err error)
 }
 
 type Authn interface {
+	Authenticate(c context.Context, r requests.Authenticate) (res responses.Authenticate, err error)
+	Invalidate(c context.Context, r requests.Invalidate) (err error)
 }
 
 type Authz interface {

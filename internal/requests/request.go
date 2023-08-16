@@ -35,3 +35,14 @@ type BindUserRole struct {
 	UserName string `json:"userName" validate:"required"`
 	RoleName string `json:"roleName" validate:"required"`
 }
+
+// authn
+
+type Authenticate struct {
+	Name     string `json:"name" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}
+
+type Invalidate struct {
+	Token string `json:"token" validate:"required"`
+}

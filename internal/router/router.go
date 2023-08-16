@@ -13,18 +13,21 @@ type Router struct {
 	roleSvc    services.Role
 	usrSvc     services.User
 	usrRoleSvc services.UserRole
+	authnSvc   services.Authn
 }
 
 func InitRouter(
 	roleSvc services.Role,
 	usrSvc services.User,
 	usrRoleSvc services.UserRole,
+	authnSvc services.Authn,
 ) Router {
 	var r Router
 
 	r.roleSvc = roleSvc
 	r.usrSvc = usrSvc
 	r.usrRoleSvc = usrRoleSvc
+	r.authnSvc = authnSvc
 
 	engine := gin.New()
 	engine.MaxMultipartMemory = 8 << 20 // 8 MiB
@@ -36,6 +39,7 @@ func InitRouter(
 	r.initUserRoutes(v1.Group("/users"))
 	r.initRoleRoutes(v1.Group("/roles"))
 	r.initUserRoleRoutes(v1.Group("/user-roles"))
+	r.initAuthnRoutes(v1.Group("/authn"))
 
 	return r
 }
@@ -56,6 +60,10 @@ func (r Router) initRoleRoutes(g *gin.RouterGroup) {
 
 func (r Router) initUserRoleRoutes(g *gin.RouterGroup) {
 	g.POST("/", Wrapper(r.bindUserRole))
+}
+
+func (r Router) initAuthnRoutes(g *gin.RouterGroup) {
+	g.POST("/tokens", Wrapper(r.applyToken))
 }
 
 func (r Router) Start() (err error) {

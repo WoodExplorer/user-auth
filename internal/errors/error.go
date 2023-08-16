@@ -14,3 +14,8 @@ var (
 var (
 	ErrUserExisted = errors.New("user already existed")
 )
+
+// authn
+var (
+	ErrAuthnFailed = errors.New("authentication failed")
+)

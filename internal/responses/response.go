@@ -33,3 +33,9 @@ type GetRole struct {
 type ListRoles struct {
 	Items []Role `json:"items"`
 }
+
+// authn
+
+type Authenticate struct {
+	Token string `json:"token"`
+}
