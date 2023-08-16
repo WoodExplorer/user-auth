@@ -18,3 +18,17 @@ func (r Router) applyToken(c *gin.Context) (_ interface{}, err error) {
 
 	return res, nil
 }
+
+func (r Router) invalidateToken(c *gin.Context) (_ interface{}, err error) {
+	var p requests.Invalidate
+	if err = bindAndValidate(c, &p); err != nil {
+		return
+	}
+
+	err = r.authnSvc.Invalidate(c, p)
+	if err != nil {
+		return
+	}
+
+	return
+}

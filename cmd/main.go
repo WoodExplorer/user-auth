@@ -19,6 +19,7 @@ package cmd
 
 import (
 	role_repo "github.com/WoodExplorer/user-auth/internal/repository/role"
+	token_blacklist_repo "github.com/WoodExplorer/user-auth/internal/repository/token_blacklist"
 	user_repo "github.com/WoodExplorer/user-auth/internal/repository/user"
 	user_role_repo "github.com/WoodExplorer/user-auth/internal/repository/user_role"
 	"github.com/WoodExplorer/user-auth/internal/router"
@@ -56,11 +57,12 @@ var runCmd = &cobra.Command{
 		rr := role_repo.NewRepo(store)
 		ur := user_repo.NewRepo(store)
 		urr := user_role_repo.NewRepo(store)
+		tbr := token_blacklist_repo.NewRepo(store)
 
 		roleSvc := role.NewService(rr)
 		userSvc := user.NewService(ur)
 		userRoleSvc := user_role.NewService(urr)
-		authnSvc := authn.NewService(ur)
+		authnSvc := authn.NewService(ur, tbr)
 
 		r := router.InitRouter(roleSvc, userSvc, userRoleSvc, authnSvc)
 		go func() {

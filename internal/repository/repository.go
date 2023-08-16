@@ -22,3 +22,7 @@ type RoleRepo interface {
 type UserRoleRepo interface {
 	Create(c context.Context, userRole models.UserRole) (err error)
 }
+
+type TokenBlacklistRepo interface {
+	Create(c context.Context, token models.Token) (err error)
+}

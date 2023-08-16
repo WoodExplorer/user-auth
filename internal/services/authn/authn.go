@@ -13,12 +13,14 @@ import (
 )
 
 type Service struct {
-	repo repository.UserRepo
+	repo          repository.UserRepo
+	blacklistRepo repository.TokenBlacklistRepo
 }
 
-func NewService(repo repository.UserRepo) services.Authn {
+func NewService(repo repository.UserRepo, blacklistRepo repository.TokenBlacklistRepo) services.Authn {
 	var srv Service
 	srv.repo = repo
+	srv.blacklistRepo = blacklistRepo
 	return &srv
 }
 
@@ -45,6 +47,17 @@ func (s *Service) Authenticate(c context.Context, req requests.Authenticate) (re
 }
 
 func (s *Service) Invalidate(c context.Context, r requests.Invalidate) (err error) {
-	//TODO implement me
-	panic("implement me")
+
+	_, err = pkg.ParseToken(r.Token, configs.GetJwtKey())
+	if err != nil {
+		err = errors.ErrAuthnInvalidToken
+		return
+	}
+
+	err = s.blacklistRepo.Create(c, models.Token{Value: r.Token})
+	if err != nil {
+		return
+	}
+
+	return
 }

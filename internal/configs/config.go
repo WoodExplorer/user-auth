@@ -1,12 +1,22 @@
 package configs
 
+import "time"
+
 type Config struct {
 	Port   int    `json:"port"`
 	Debug  bool   `json:"debug"`
 	JwtKey string `json:"jwtKey"`
 }
 
-var config Config
+var (
+	config Config
+
+	jwtKeyUniqSuffix string
+)
+
+func init() {
+	jwtKeyUniqSuffix = time.Now().String()
+}
 
 func GetPort() int {
 	if config.Port <= 0 {
@@ -16,8 +26,10 @@ func GetPort() int {
 }
 
 func GetJwtKey() string {
+	// use jwtKeyUniqSuffix to make sure token will be invalid after service restart,
+	// so as to avoid the problem caused by non-persistent token blacklist
 	if len(config.JwtKey) <= 0 {
-		return "0db23e471804d9ecbc126cbeb8393b89"
+		return "0db23e471" + jwtKeyUniqSuffix
 	}
-	return config.JwtKey
+	return config.JwtKey + jwtKeyUniqSuffix
 }

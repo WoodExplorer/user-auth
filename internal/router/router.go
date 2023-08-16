@@ -64,6 +64,7 @@ func (r Router) initUserRoleRoutes(g *gin.RouterGroup) {
 
 func (r Router) initAuthnRoutes(g *gin.RouterGroup) {
 	g.POST("/tokens", Wrapper(r.applyToken))
+	g.DELETE("/tokens", Wrapper(r.invalidateToken))
 }
 
 func (r Router) Start() (err error) {
