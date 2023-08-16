@@ -9,3 +9,7 @@ type Wrapper struct {
 type GetUser struct {
 	Name string `json:"name"`
 }
+
+type GetRole struct {
+	Name string `json:"name"`
+}

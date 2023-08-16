@@ -18,8 +18,10 @@
 package cmd
 
 import (
-	repoUser "github.com/WoodExplorer/user-auth/internal/repository/user"
+	roleRepo "github.com/WoodExplorer/user-auth/internal/repository/role"
+	userRepo "github.com/WoodExplorer/user-auth/internal/repository/user"
 	"github.com/WoodExplorer/user-auth/internal/router"
+	"github.com/WoodExplorer/user-auth/internal/services/role"
 	"github.com/WoodExplorer/user-auth/internal/services/user"
 	"github.com/WoodExplorer/user-auth/internal/stores/memory"
 	"github.com/rs/zerolog/log"
@@ -48,10 +50,13 @@ var runCmd = &cobra.Command{
 		store := memory.NewStore()
 		store.Start()
 
-		repo := repoUser.NewRepo(store)
-		srvUser := user.NewService(repo)
+		rr := roleRepo.NewRepo(store)
+		ur := userRepo.NewRepo(store)
 
-		r := router.InitRouter(srvUser)
+		roleSvc := role.NewService(rr)
+		userSvc := user.NewService(ur)
+
+		r := router.InitRouter(roleSvc, userSvc)
 		go func() {
 			err := r.Start()
 			if err != nil {

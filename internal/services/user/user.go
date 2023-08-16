@@ -20,12 +20,10 @@ func NewService(repo repository.UserRepo) services.User {
 }
 
 func (s *Service) Create(c context.Context, req requests.CreateUser) (err error) {
-
 	err = s.repo.Create(c, models.User{Name: req.Name, PasswordHash: req.Password})
 	if err != nil {
 		return
 	}
-
 	return
 }
 
