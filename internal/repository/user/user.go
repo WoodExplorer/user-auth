@@ -28,7 +28,7 @@ func NewRepo(store stores.Store) repository.UserRepo {
 	return &repo
 }
 
-func (r Repo) Create(c context.Context, user models.User) (err error) {
+func (r Repo) Create(_ context.Context, user models.User) (err error) {
 	bytes, err := json.Marshal(user)
 	if err != nil {
 		return
@@ -40,7 +40,7 @@ func (r Repo) Create(c context.Context, user models.User) (err error) {
 	return
 }
 
-func (r Repo) Get(c context.Context, user models.UserIdentity) (res models.User, err error) {
+func (r Repo) Get(_ context.Context, user models.UserIdentity) (res models.User, err error) {
 	bytes, err := r.store.Get(prefix(user.Name))
 	if errors.Is(err, appErr.ErrStoreRecNotFound) {
 		err = appErr.ErrRepoRecNotFound
@@ -71,7 +71,7 @@ func (r Repo) List(_ context.Context) (res []models.User, err error) {
 	return
 }
 
-func (r Repo) Delete(c context.Context, user models.UserIdentity) (err error) {
+func (r Repo) Delete(_ context.Context, user models.UserIdentity) (err error) {
 	err = r.store.Del(prefix(user.Name))
 	if errors.Is(err, appErr.ErrStoreRecNotFound) {
 		err = appErr.ErrRepoRecNotFound

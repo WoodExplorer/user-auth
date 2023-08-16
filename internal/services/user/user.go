@@ -27,7 +27,7 @@ func (s *Service) Create(c context.Context, req requests.CreateUser) (err error)
 	err = s.repo.Create(c, models.User{Name: req.Name, PasswordHash: hash})
 	if err != nil {
 		if errors.Is(err, appErr.ErrStoreRecAlreadyExists) {
-			err = appErr.ErrSvcUserExisted
+			err = appErr.ErrSvcUserAlreadyExisted
 		}
 		return
 	}
@@ -59,6 +59,9 @@ func (s *Service) List(c context.Context) (res responses.ListUsers, err error) {
 func (s *Service) Delete(c context.Context, req requests.DeleteUser) (err error) {
 	err = s.repo.Delete(c, models.UserIdentity{Name: req.Name})
 	if err != nil {
+		if errors.Is(err, appErr.ErrRepoRecNotFound) {
+			err = appErr.ErrSvcUserNotExisted
+		}
 		return
 	}
 

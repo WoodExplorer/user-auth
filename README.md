@@ -1,14 +1,23 @@
 # user-auth
 
+## coverage
+
+```bash
+go test ./... -cover -coverprofile=coverage.out
+go tool cover -html=coverage.out
+```
+
+## thoughts
 atomicity
 isolation
 
 ## time complexity analysis
 
 ### known issues
-- has no error code yet except for 0 - ok and 1 - error 
-- error message i18n is not implemented
+- no error code yet except for 0 - ok and 1 - error 
+- no error message i18n
 - no id field for user and role yet, due to lack of a proper id generation scheme, which I found difficult to implement in a short time window.
+- has not use wire to manage object dependency yet
 
 ### curl usages
 

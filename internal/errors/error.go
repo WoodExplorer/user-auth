@@ -19,7 +19,8 @@ var (
 // service
 
 var (
-	ErrSvcUserExisted = errors.New("user already existed")
+	ErrSvcUserAlreadyExisted = errors.New("user already existed")
+	ErrSvcUserNotExisted     = errors.New("user does not existed")
 )
 
 // authn
