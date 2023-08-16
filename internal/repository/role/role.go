@@ -10,6 +10,14 @@ import (
 	"github.com/pkg/errors"
 )
 
+const (
+	keyPrefix = "role-"
+)
+
+func prefix(key string) string {
+	return keyPrefix + key
+}
+
 type Repo struct {
 	store stores.Store
 }
@@ -25,7 +33,7 @@ func (r Repo) Create(c context.Context, user models.Role) (err error) {
 	if err != nil {
 		return
 	}
-	err = r.store.Set(user.Name, bytes)
+	err = r.store.Set(prefix(user.Name), bytes)
 	if err != nil {
 		return
 	}
@@ -33,7 +41,7 @@ func (r Repo) Create(c context.Context, user models.Role) (err error) {
 }
 
 func (r Repo) Get(c context.Context, user models.RoleIdentity) (res models.Role, err error) {
-	bytes, err := r.store.Get(user.Name)
+	bytes, err := r.store.Get(prefix(user.Name))
 	if errors.Is(err, appErr.ErrStoreRecNotFound) {
 		err = appErr.ErrRepoRecNotFound
 		return
@@ -48,7 +56,7 @@ func (r Repo) Get(c context.Context, user models.RoleIdentity) (res models.Role,
 }
 
 func (r Repo) Delete(c context.Context, user models.RoleIdentity) (err error) {
-	err = r.store.Del(user.Name)
+	err = r.store.Del(prefix(user.Name))
 	if errors.Is(err, appErr.ErrStoreRecNotFound) {
 		err = appErr.ErrRepoRecNotFound
 		return

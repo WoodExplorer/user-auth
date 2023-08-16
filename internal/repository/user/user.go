@@ -10,6 +10,14 @@ import (
 	"github.com/pkg/errors"
 )
 
+const (
+	keyPrefix = "user-"
+)
+
+func prefix(key string) string {
+	return keyPrefix + key
+}
+
 type Repo struct {
 	store stores.Store
 }
@@ -21,7 +29,7 @@ func NewRepo(store stores.Store) repository.UserRepo {
 }
 
 func (r Repo) Create(c context.Context, user models.User) (err error) {
-	bytes, err := json.Marshal(user)
+	bytes, err := json.Marshal(prefix(user.Name))
 	if err != nil {
 		return
 	}
@@ -33,7 +41,7 @@ func (r Repo) Create(c context.Context, user models.User) (err error) {
 }
 
 func (r Repo) Get(c context.Context, user models.UserIdentity) (res models.User, err error) {
-	bytes, err := r.store.Get(user.Name)
+	bytes, err := r.store.Get(prefix(user.Name))
 	if errors.Is(err, appErr.ErrStoreRecNotFound) {
 		err = appErr.ErrRepoRecNotFound
 		return
@@ -48,7 +56,7 @@ func (r Repo) Get(c context.Context, user models.UserIdentity) (res models.User,
 }
 
 func (r Repo) Delete(c context.Context, user models.UserIdentity) (err error) {
-	err = r.store.Del(user.Name)
+	err = r.store.Del(prefix(user.Name))
 	if errors.Is(err, appErr.ErrStoreRecNotFound) {
 		err = appErr.ErrRepoRecNotFound
 		return
