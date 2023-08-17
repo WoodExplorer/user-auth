@@ -19,7 +19,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"github.com/stretchr/testify/assert"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"sort"
@@ -37,7 +36,7 @@ func TestRouter(t *testing.T) {
 	tbr := token_blacklist_repo.NewRepo(store)
 
 	roleSvc := role.NewService(rr)
-	userSvc := user.NewService(ur)
+	userSvc := user.NewService(ur, urr)
 	userRoleSvc := user_role.NewService(urr)
 	authnSvc := authn.NewService(ur, tbr)
 	authzSvc := authz.NewService(urr, tbr)
@@ -110,7 +109,7 @@ func doReq(t *testing.T, eng *gin.Engine, method, url string, body io.Reader) (w
 	defer func() {
 		_ = res.Body.Close()
 	}()
-	data, err := ioutil.ReadAll(res.Body)
+	data, err := io.ReadAll(res.Body)
 	if err != nil {
 		t.Errorf("expected error to be nil got %v", err)
 	}

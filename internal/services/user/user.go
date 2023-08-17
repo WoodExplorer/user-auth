@@ -13,12 +13,14 @@ import (
 )
 
 type Service struct {
-	repo repository.UserRepo
+	repo         repository.UserRepo
+	userRoleRepo repository.UserRoleRepo
 }
 
-func NewService(repo repository.UserRepo) services.User {
+func NewService(repo repository.UserRepo, userRoleRepo repository.UserRoleRepo) services.User {
 	var srv Service
 	srv.repo = repo
+	srv.userRoleRepo = userRoleRepo
 	return &srv
 }
 
@@ -64,5 +66,11 @@ func (s *Service) Delete(c context.Context, req requests.DeleteUser) (err error)
 		}
 		return
 	}
+
+	err = s.userRoleRepo.DeleteByUser(c, models.UserIdentity{Name: req.Name})
+	if err != nil {
+		return
+	}
+
 	return
 }

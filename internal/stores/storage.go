@@ -12,6 +12,7 @@ type Store interface {
 	HSet(key string, subKey string, data []byte) (err error)
 	HGet(key string, subKey string) (data []byte, err error)
 	HGetAll(key string) (m map[string][]byte, err error)
+	HDelAll(key string) (err error)
 
 	BeginTx() Store
 	CommitTx() (err error)

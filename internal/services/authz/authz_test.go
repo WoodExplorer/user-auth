@@ -30,17 +30,14 @@ func TestAuthz(t *testing.T) {
 	defer store.Stop()
 
 	ur := user_repo.NewRepo(store)
-	us := user.NewService(ur)
-
-	rr := role_repo.NewRepo(store)
-	rs := role.NewService(rr)
-
 	urr := user_role_repo.NewRepo(store)
-	urs := user_role.NewService(urr)
-
+	rr := role_repo.NewRepo(store)
 	tbr := token_blacklist.NewRepo(store)
-	ans := authn.NewService(ur, tbr)
 
+	us := user.NewService(ur, urr)
+	rs := role.NewService(rr)
+	urs := user_role.NewService(urr)
+	ans := authn.NewService(ur, tbr)
 	azs := authz.NewService(urr, tbr)
 
 	err = us.Create(c, requests.CreateUser{

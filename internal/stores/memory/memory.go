@@ -58,6 +58,8 @@ func (s *Store) handleCmd(c Command) (res Result) {
 		res.Data, res.Err = s.hget(c.Key, c.SubKey)
 	case opHGetAll:
 		res.Data, res.Err = s.hgetall(c.Key)
+	case opHDelAll:
+		res.Err = s.hdelall(c.Key)
 	case opBatch:
 		res.Err = s.batch(c.Data)
 	default:
@@ -158,6 +160,17 @@ func (s *Store) HGetAll(key string) (m map[string][]byte, err error) {
 	return res.Data.(map[string][]byte), res.Err
 }
 
+func (s *Store) HDelAll(key string) (err error) {
+	ret := make(chan Result, 1)
+	s.chCmd <- Command{
+		Op:  opHDelAll,
+		Key: key,
+		Ret: ret,
+	}
+	res := <-ret
+	return res.Err
+}
+
 func (s *Store) SyncExe(cmd Command) Result {
 	cmd.Ret = make(chan Result, 1)
 	s.chCmd <- cmd
@@ -209,7 +222,6 @@ func (s *Store) batch(data []byte) (err error) {
 	return
 }
 
-// keys
 // TODO: This function has serious performance problem. Potential optimizations include:
 // 1) use dict tree
 // 2) introduce scan, which would return only a part of data
@@ -222,7 +234,6 @@ func (s *Store) keys(keyPrefix string) (res [][]byte, err error) {
 	return
 }
 
-// hset
 // TODO: inconsistent with op set, which would report 'record already existed' error
 func (s *Store) hset(key string, subKey string, data []byte) (err error) {
 	iVal, ok := s.area[key]
@@ -257,5 +268,15 @@ func (s *Store) hgetall(key string) (res map[string][]byte, err error) {
 		return
 	}
 	res = iVal.(map[string][]byte)
+	return
+}
+
+func (s *Store) hdelall(key string) (err error) {
+	_, ok := s.area[key]
+	if !ok {
+		err = appErr.ErrStoreRecNotFound
+		return
+	}
+	delete(s.area, key)
 	return
 }

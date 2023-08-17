@@ -9,6 +9,8 @@ const (
 	opHSet    = "hset"
 	opHGet    = "hget"
 	opHGetAll = "hgetAll"
+	opHDel    = "hdel"
+	opHDelAll = "hdelAll"
 )
 
 type Result struct {

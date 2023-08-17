@@ -21,8 +21,9 @@ type RoleRepo interface {
 
 type UserRoleRepo interface {
 	Create(c context.Context, userRole models.UserRole) (err error)
-	Exists(_ context.Context, userRole models.UserRoleIdentity) (ok bool, err error)
-	GetUserRoles(_ context.Context, user models.UserIdentity) (res []models.UserRole, err error)
+	Exists(c context.Context, userRole models.UserRoleIdentity) (ok bool, err error)
+	GetUserRoles(c context.Context, user models.UserIdentity) (res []models.UserRole, err error)
+	DeleteByUser(c context.Context, identity models.UserIdentity) (err error)
 }
 
 type TokenBlacklistRepo interface {

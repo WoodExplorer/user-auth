@@ -25,7 +25,8 @@ func TestAuthn(t *testing.T) {
 	defer store.Stop()
 
 	ur := user_repo.NewRepo(store)
-	us := user.NewService(ur)
+	urr := user_role_repo.NewRepo(store)
+	us := user.NewService(ur, urr)
 
 	rr := role_repo.NewRepo(store)
 	rs := role.NewService(rr)
@@ -41,7 +42,6 @@ func TestAuthn(t *testing.T) {
 	})
 	assert.Equal(t, err, nil)
 
-	urr := user_role_repo.NewRepo(store)
 	urs := user_role.NewService(urr)
 	err = urs.Bind(c, requests.BindUserRole{
 		UserName: "ua",

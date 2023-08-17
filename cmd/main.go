@@ -61,7 +61,7 @@ var runCmd = &cobra.Command{
 		tbr := token_blacklist_repo.NewRepo(store)
 
 		roleSvc := role.NewService(rr)
-		userSvc := user.NewService(ur)
+		userSvc := user.NewService(ur, urr)
 		userRoleSvc := user_role.NewService(urr)
 		authnSvc := authn.NewService(ur, tbr)
 		authzSvc := authz.NewService(urr, tbr)

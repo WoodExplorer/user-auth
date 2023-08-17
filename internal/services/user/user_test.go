@@ -4,6 +4,7 @@ import (
 	"context"
 	appErr "github.com/WoodExplorer/user-auth/internal/errors"
 	user_repo "github.com/WoodExplorer/user-auth/internal/repository/user"
+	user_role_repo "github.com/WoodExplorer/user-auth/internal/repository/user_role"
 	"github.com/WoodExplorer/user-auth/internal/requests"
 	"github.com/WoodExplorer/user-auth/internal/services/user"
 	"github.com/WoodExplorer/user-auth/internal/stores/memory"
@@ -21,7 +22,8 @@ func TestCreate(t *testing.T) {
 	defer store.Stop()
 
 	ur := user_repo.NewRepo(store)
-	svc := user.NewService(ur)
+	urr := user_role_repo.NewRepo(store)
+	svc := user.NewService(ur, urr)
 
 	err = svc.Create(c, requests.CreateUser{
 		Name:     "ua",
@@ -45,7 +47,8 @@ func TestDelete(t *testing.T) {
 	defer store.Stop()
 
 	ur := user_repo.NewRepo(store)
-	svc := user.NewService(ur)
+	urr := user_role_repo.NewRepo(store)
+	svc := user.NewService(ur, urr)
 
 	err = svc.Create(c, requests.CreateUser{
 		Name:     "ua",

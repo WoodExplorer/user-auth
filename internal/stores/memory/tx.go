@@ -79,6 +79,16 @@ func (t *Tx) HGetAll(_ string) (m map[string][]byte, err error) {
 	return
 }
 
+func (t *Tx) HDelAll(key string) (err error) {
+	ret := make(chan Result, 1)
+	t.queued = append(t.queued, Command{
+		Op:  opHDelAll,
+		Key: key,
+		Ret: ret,
+	})
+	return
+}
+
 func (t *Tx) BeginTx() stores.Store {
 	return t
 }

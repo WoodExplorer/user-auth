@@ -103,3 +103,15 @@ func (r Repo) GetUserRoles(_ context.Context, user models.UserIdentity) (res []m
 	}
 	return
 }
+
+func (r Repo) DeleteByUser(_ context.Context, user models.UserIdentity) (err error) {
+	err = r.store.HDelAll(getKey(user))
+	if errors.Is(err, appErr.ErrStoreRecNotFound) {
+		err = nil // TODO: inconsistent behavior regarding to delete
+		return
+	} else if err != nil {
+		return
+	}
+
+	return
+}

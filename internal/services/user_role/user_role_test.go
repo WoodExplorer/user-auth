@@ -23,9 +23,10 @@ func TestBind(t *testing.T) {
 	defer store.Stop()
 
 	ur := user_repo.NewRepo(store)
-	us := user.NewService(ur)
-
 	rr := role_repo.NewRepo(store)
+	urr := user_role_repo.NewRepo(store)
+
+	us := user.NewService(ur, urr)
 	rs := role.NewService(rr)
 
 	err = us.Create(c, requests.CreateUser{
@@ -39,7 +40,6 @@ func TestBind(t *testing.T) {
 	})
 	assert.Equal(t, err, nil)
 
-	urr := user_role_repo.NewRepo(store)
 	urs := user_role.NewService(urr)
 	err = urs.Bind(c, requests.BindUserRole{
 		UserName: "ua",
