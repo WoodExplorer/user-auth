@@ -121,4 +121,7 @@ Regretfully, test coverage is in need of improvement due to time limit. I always
 - no error message i18n
 - no id field for user and role yet, due to lack of a proper id generation scheme, which I found difficult to implement in a short time window.
 - ...
-- 
+
+## Others
+
+- [Go Report Card](https://goreportcard.com/report/github.com/WoodExplorer/user-auth)
