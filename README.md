@@ -4,7 +4,7 @@ A simple implementation of user auth manager.
 
 Hopefully, this implementation could provide relevant information about what my skills and habit.
 
-[![Go Report Card](https://goreportcard.com/report/github.com/WoodExplorer/user-auth)](https://goreportcard.com/report/github.com/WoodExplorer/user-auth)
+[![Go Report Card](https://goreportcard.com/badge/github.com/WoodExplorer/user-auth)](https://goreportcard.com/report/github.com/WoodExplorer/user-auth)
 
 ## Usages
 
